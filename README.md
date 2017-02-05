@@ -127,6 +127,8 @@ record = {
     'price': row[3]
 }
 ...
+portfolio.append(record)
+
 for holding in portfolio:
     total += holding['shares'] * holding['price']
 ```
@@ -137,7 +139,38 @@ import json
 data = json.dumps(portfolio)  # Just a string
 port = json.loads(data)
 ```
-portfolio.append(record)
+* sort portfolio by shares name:
+```python
+portfolio.sort(key=lambda holding: holding['name'])
+```
+* group items using `itertools module` (we may even build a dictionary):
+```python
+import itertools
+
+for name, item in itertools.groupby(portfolio, key=lambda holding: holding['name']):
+...     print('NAME:', name)
+...     for it in items:
+...             print(it)
+```
+```
+NAME: AA
+{'name': 'AA', 'shares': 100, 'price': 32.2, 'date': '2007-06-11'}
+NAME: CAT
+{'name': 'CAT', 'shares': 150, 'price': 83.44, 'date': '2006-09-23'}
+NAME: IBM
+{'name': 'IBM', 'shares': 50, 'price': 91.1, 'date': '2007-05-13'}
+{'name': 'IBM', 'shares': 100, 'price': 70.44, 'date': '2006-07-09'}
+NAME: MSFT
+{'name': 'MSFT', 'shares': 50, 'price': 65.1, 'date': '2006-10-31'}
+{'name': 'MSFT', 'shares': 200, 'price': 51.23, 'date': '2007-05-17'}
+```
+```python
+by_name = {name:list(items) for name,items in itertools.groupby(portfolio, key=lambda holding: holding['name'])}
+```
+```
+>>> by_name['MSFT']
+[{'name': 'MSFT', 'shares': 50, 'price': 65.1, 'date': '2006-10-31'}, {'name': 'MSFT', 'shares': 200, 'price': 51.23, 'date': '2007-05-17'}]
+```
 ## Lesson 6. Library functions and import
 ## Lesson 7. Classes and objects
 ## Lesson 8. Inheritance
