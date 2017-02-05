@@ -47,8 +47,61 @@ parts[0] = parts[0].strip('"')
 parts[2] = int(parts[2])
 parts[3] = float(parts[3])
 ```
+* using csv module (instead of working on the low level):
+```python
+import csv
 
+with open('portfolio2.csv', 'r') as f:
+    rows = csv.reader(f)      # [['name', 'date', 'shares', 'price'], ['AA', 'June 11, 2007', '100', '32.20'], ...
+    headers = next(f)
+    for row in rows:
+        row[2] = int(row[2])
+        ...
+```
 ## Lesson 4. Functions and error handling
+* using `glob` module to iterate over files:
+```python
+import glob
+
+files = glob.glob('prtfolio*.csv')
+for filename in files:
+      print(filename, portfolio_cost(filename))
+      ...
+```
+* error handling in python:
+```python
+try:
+    row[2] = int(row[2])
+    row[3] = float(row[3])
+except ValueError as err:
+    print('Row:', rowno, 'Error:', err)
+    continue      # Skip to the next row
+```
+* using `enumerate()` instead of creating some counter:
+```python
+rows = csv.reader(f)    # [['name', 'date', 'shares', 'price'], ['AA', 'June 11, 2007', '100', '32.20'], ...
+for rowno, row in enumerate(rows, start=1):
+      ...
+```
+* why should we use specific exception instead of `Exception` ('diaper pattern')?
+```python
+try:
+    row[2] = int(row[2])
+    row[3] = flot(row[3])     # This mistake (flot instead float) will also be catched. This is not FAIL FAST.
+except Exception as err:
+    print('Row:', rowno, 'Error:', err)
+    continue      # Skip to the next row
+```
+* force to use keyword argument:
+```python
+def portfolio_cost(filename, *, errors='warn'):       # Force to use keyword argument
+      if errors not in {'warn', 'silent'}:            # Defensive programming
+            raise ValueError("errors must be on of: 'warn', 'silent'")
+      ...
+# total = portfolio_cost('missing.csv', 'silent') - error
+total = portfolio_cost('missing.csv', errors='silent')
+```
+* if you can not handle exception just don't do this; it will be handled by another (higher-level) process;
 ## Lesson 5. Data structures and data manipulation
 ## Lesson 6. Library functions and import
 ## Lesson 7. Classes and objects
