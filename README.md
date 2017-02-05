@@ -102,7 +102,42 @@ def portfolio_cost(filename, *, errors='warn'):       # Force to use keyword arg
 total = portfolio_cost('missing.csv', errors='silent')
 ```
 * if you can not handle exception just don't do this; it will be handled by another (higher-level) process;
+
 ## Lesson 5. Data structures and data manipulation
+* tuple is like an entry in database (different types are common); main operations - packing and unpacking;
+* in lists entries are usually of the same type;
+* set eliminates duplicates and this is its main use;the other one - membership testing;
+* we may read file into list of tuples but in this case we have to unpack a lot of positions:
+```python
+...
+record = tuple(row)
+portfolio.append(record)
+...
+
+for name, date, shares, price in portfolio:     # We have to unpack 4 values but need only 2
+    total += shares * price
+```
+* better solution would be to use list of dictionaries:
+```python
+...
+record = {
+    'name': row[0],
+    'date': row[1],
+    'shares': row[2],
+    'price': row[3]
+}
+...
+for holding in portfolio:
+    total += holding['shares'] * holding['price']
+```
+* and in the last case we can transfer our data structure as json:
+```python
+import json
+
+data = json.dumps(portfolio)  # Just a string
+port = json.loads(data)
+```
+portfolio.append(record)
 ## Lesson 6. Library functions and import
 ## Lesson 7. Classes and objects
 ## Lesson 8. Inheritance
