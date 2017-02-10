@@ -1,0 +1,7 @@
+                name               shares 
+                  AA                  100 
+                 IBM                   50 
+                 CAT                  150 
+                MSFT                  200 
+                MSFT                   50 
+                 IBM                  100 
