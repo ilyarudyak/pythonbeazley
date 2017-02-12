@@ -172,6 +172,44 @@ by_name = {name:list(items) for name,items in itertools.groupby(portfolio, key=l
 [{'name': 'MSFT', 'shares': 50, 'price': 65.1, 'date': '2006-10-31'}, {'name': 'MSFT', 'shares': 200, 'price': 51.23, 'date': '2007-05-17'}]
 ```
 ## Lesson 6. Library functions and import
+* when we import module python executes it statement-by-statement; if we use `from module import fun` python still executes entire module;
+* with `if __name__ == '__main__'` statements will **not** be executed when we import the module; they will be executed only when we run module with `python module`;
+* we may change variable in module only when we: (1) import module; (2) use module namespace - `simple.x = 13`, not `x = 13`;
+* python caches module; so when we import them second time in interactive prompt - nothing happens; they're sitting in `sys.modules`;
+* we may generalize converting of `int` and `float` in holding:
+
+```python
+# types = ['str', 'str', 'int', 'float']
+# row = ['IBM', '2007-12-07', '50', '32.2']
+row = [func(val) for func, val in zip(types, row)]
+...
+# recors = {'name':'IBM', ... }
+record = dict(zip(headers, row))
+```
+* we may create a module `reader` that reads csv files into list of dictionaries and do conversion based on list of types; we then import it into our `port.py`:
+```python
+import reader
+
+def read_portfolio(filename):
+    types = [str, str, int, float]
+    return reader.read_csv(filename, types)
+```
+* how to create a package: (a) create a directory and put files into it; (b) create `__init__.py` and import statements to it (see below); (c) change import statements: `from . import reader` (we use `.` instead of hardcoding package name); 
+```python
+# __init__.py
+
+from .port import read_portfolio
+from .reader import read_csv
+...
+```
+```
+# now we can call these functions without module names:
+>>> import portie
+>>> portie.read_portfolio('portfolio.csv')
+[{'name': 'AA', 'date': '2007-06-11', 'shares': 100, 'price': 32.2}, ...
+
+```
+
 ## Lesson 7. Classes and objects
 ## Lesson 8. Inheritance
 ## Lesson 9. Python magic methods
