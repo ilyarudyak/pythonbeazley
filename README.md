@@ -209,8 +209,61 @@ from .reader import read_csv
 [{'name': 'AA', 'date': '2007-06-11', 'shares': 100, 'price': 32.2}, ...
 
 ```
-
 ## Lesson 7. Classes and objects
+* There are a few differences from java in creating classes:
+```python
+class Holding(object):                                      # we inherited from object class
+    def __init__(self, name, date, shares, price):          # we may have only *one* constructor, its name - '__init__'
+        self.name = name                                    # we don't declare instance variables
+        self.date = date
+        self.shares = shares
+        self.price = price
+
+    def cost(self):                                         # we don't omit 'self'
+        return self.shares * self.price
+
+    def sell(self, nshares):
+        self.shares -= nshares
+```
+* by default all instance variables and methods are **public**; so we can get and set them; we may even create one on the fly or delete an existing one:
+```python
+h = Holding('AA','2007-06-11','100','32.20')
+h.shares = 50           # set shares to 50           
+h.time = '10.30am'      # no such attribute before
+del h.shares            # completely delete attribute
+```
+* we may access attributes with functions `getattr()` and `setattr` so we can write highly generic code:
+```python
+def print_table(objects, colnames):
+    '''
+    Formatted table showing attributes from a list of objects
+    '''
+    for colname in colnames:
+        print('{:>10s}'.format(colname), end=' ')
+    print()
+    for obj in objects:
+        for colname in colnames:
+            print('{:>10s}'.format(str(getattr(obj, colname))), end=' ')
+        print()
+```
+* to get multiple constructors we use special word `cls`:
+```python
+class Date(object):
+    def __init__(self, year, month, day):
+        self.year = year
+        self.month = month
+        self.day = day
+
+    @classmethod
+    def from_string(cls, s):
+        parts = s.split('-')
+        return cls(int(parts[0]), int(parts[1]), int(parts[2]))
+
+    @classmethod
+    def today(cls):
+        t = time.localtime()
+        return cls(t.tm_year, t.tm_mon, t.tm_mday)
+```
 ## Lesson 8. Inheritance
 ## Lesson 9. Python magic methods
 ## Lesson 10. Encapsulation
